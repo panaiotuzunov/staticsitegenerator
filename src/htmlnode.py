@@ -46,6 +46,9 @@ class ParentNode(HTMLNode):
             raise ValueError("Invalid HTML: no children")
         html = f"<{self.tag}{self.props_to_html()}>"
         for leaf in self.children:
-            html += leaf.to_html()  # Append each leaf's HTML representation
+            html += leaf.to_html()
         html += f"</{self.tag}>"
         return html
+
+    def __repr__(self):
+        return f"ParentNode({self.tag}, children: {self.children}, {self.props})"
