@@ -1,3 +1,5 @@
+from htmlnode import LeafNode, ParentNode
+
 def markdown_to_blocks(markdown):
     unfiltered_blocks =  markdown.split('\n\n')
     filtered_blocks = []
@@ -69,3 +71,34 @@ def block_to_block_type(block):
     if is_ordered_list(block):
         return "ordered_list"
     return "paragraph"
+
+
+def markdown_to_html_node(markdown):
+    blocks = markdown_to_blocks(markdown)
+    nodes_lst = []
+    for block in blocks:
+        block_type = block_to_block_type(block)
+        
+        match block_type:
+            case "heading":
+                tag = f"h{len(block.split(maxsplit = 1)[0])}"
+                value = block.split(maxsplit = 1)[1]
+                nodes_lst.append(LeafNode(tag, value))
+            case "code":
+                pass
+            case "quote":
+                pass
+            case "unordered_list":
+                pass
+            case "ordered_list":
+                pass
+            case "paragraph":
+                pass
+            case _:
+                raise ValueError("Block type not found") #Should never be raised, added just in case. Get it... in case... LOL
+    return ParentNode("div", nodes_lst) 
+
+# def main():
+#     node = markdown_to_html_node("# Testing....\n\n### And again...\n\n##### And once more...\n\n")
+#     print(node.to_html())
+# main()
