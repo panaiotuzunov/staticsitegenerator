@@ -83,6 +83,3 @@ def text_to_textnodes(text):
         split_nodes_delimiter(split_nodes_link(
             split_nodes_image([text_as_node])), '**', TextType.BOLD), '*', TextType.ITALIC), '`', TextType.CODE)
 
-
-
-

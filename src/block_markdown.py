@@ -1,4 +1,7 @@
 from htmlnode import LeafNode, ParentNode
+from inline_markdown import text_to_textnodes
+from textnode import text_node_to_html_node
+
 
 def markdown_to_blocks(markdown):
     unfiltered_blocks = markdown.split('\n\n')
@@ -82,7 +85,7 @@ def markdown_to_html_node(markdown):
             case "heading":
                 tag = f"h{len(block.split(maxsplit = 1)[0])}"
                 value = block.split(maxsplit = 1)[1]
-                nodes_lst.append(LeafNode(tag, value))
+                nodes_lst.append(ParentNode(tag, text_to_children(value)))
             case "code":
                 first_tag = "pre"
                 second_tag = "code"
@@ -90,8 +93,11 @@ def markdown_to_html_node(markdown):
                 nodes_lst.append(ParentNode(first_tag, [LeafNode(second_tag, value)]))
             case "quote":          # TODO add support for <cite> as a prop
                 tag = "blockquote"
-                value = block[1:-1]
-                nodes_lst.append(LeafNode(tag, value))
+                block_as_list = []
+                for line in block.split('\n'):
+                    block_as_list.append(line[1:].lstrip())
+                new_block = ' '.join(block_as_list)
+                nodes_lst.append(ParentNode(tag, text_to_children(new_block)))
             case "unordered_list":
                 tag = "ul"
                 nodes_lst.append(list_elements_to_html_node(tag, block))
@@ -100,7 +106,8 @@ def markdown_to_html_node(markdown):
                 nodes_lst.append(list_elements_to_html_node(tag, block))
             case "paragraph":
                 tag = "p"
-                nodes_lst.append(LeafNode(tag, block))
+                new_block = block.replace('\n', ' ')
+                nodes_lst.append(ParentNode(tag, text_to_children(new_block)))
             case _:
                 raise ValueError("Block type not found") #Should never be raised, added just in case. Get it... in case... LOL
     return ParentNode("div", nodes_lst) 
@@ -112,6 +119,12 @@ def list_elements_to_html_node(tag, block):
     start = 2
     if tag == "ol":
         start = 3
-    for line in lines:
-        nodes.append(LeafNode("li", line[start:]))
+    for num, line in enumerate(lines, 1):
+        if num == 10 or num == 100 or num == 1000 or num == 10000:
+            start += 1
+        nodes.append(ParentNode("li", text_to_children(line[start:])))
     return ParentNode(tag, nodes)
+
+
+def text_to_children(text):
+    return list(map(text_node_to_html_node, text_to_textnodes(text)))
