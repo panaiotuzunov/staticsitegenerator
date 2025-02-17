@@ -9,19 +9,13 @@ def delete_public():
     else:
         raise Exception("public folder doesn't exist")
 
-def copy_static_to_public():
-    current_path = "static/"
+def copy_static_to_public(current_path="static/", dest_path="public/"):
     if path.exists(current_path):
         for item in listdir(current_path):
-            if path.isfile(path.join(current_path, item)):
-                print(f"file - {item}")
+            source_file = path.join(current_path, item)
+            dest_file = path.join(dest_path, item)
+            if path.isfile(source_file):
+                copy(source_file, dest_file)
                 continue
-            print(f"folder - {item}")
-            
-
-
-def main():
-    copy_static_to_public()
-
-
-main()
+            mkdir(dest_file)
+            copy_static_to_public(source_file, dest_file)
