@@ -21,5 +21,4 @@ def copy_static_to_public(current_path="static/", dest_path="public/"):
                 copy(source_file, dest_file)
                 continue
             mkdir(dest_file)
-            print(dest_file)
             copy_static_to_public(source_file, dest_file)
