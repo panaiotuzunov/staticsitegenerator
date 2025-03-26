@@ -2,13 +2,13 @@ from shutil import rmtree, copy
 from os import path, listdir, mkdir
 
 
-def delete_public():
-    if path.exists("public/"):  # works only when run from project root                           
-        rmtree("public/")       # deletes the folder public and all content
-        mkdir("public/")        # creates a new public folder
+def delete_public(public_path):
+    if path.exists(public_path):                            
+        rmtree(public_path)      
+        mkdir(public_path)       
         print("Succesfully deleted contents of public folder")
     else:
-        mkdir("public/")        # creates a new public folder
+        mkdir(public_path)       
 
 
 def copy_static_to_public(current_path="static/", dest_path="public/"):
