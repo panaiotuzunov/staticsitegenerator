@@ -19,9 +19,8 @@ def generate_page(from_path, template_path, dest_path, basepath):
     source_file = get_file_contents(from_path)
     source_html = markdown_to_html_node(source_file).to_html()
     title = extract_title(source_file)
-    print(basepath)
     new_html = template_file.replace("{{ Title }}", title).replace("{{ Content }}", source_html)
-    new_html = new_html.replace('href="./', f'href="{basepath}').replace('src="./', f'src="{basepath}') # Causes problems when run with basepath = "./"
+    new_html = new_html.replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}') # Causes problems when run with basepath = "./"
     
     dest_dir_path = path.dirname(dest_path)
     if dest_dir_path != "":
