@@ -11,7 +11,7 @@ def delete_public(public_path):
         mkdir(public_path)       
 
 
-def copy_static_to_public(current_path="static/", dest_path="public/"):
+def copy_static_to_public(current_path, dest_path):
     if path.exists(current_path):
         for item in listdir(current_path):
             source_file = path.join(current_path, item)
