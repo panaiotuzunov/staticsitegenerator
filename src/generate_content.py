@@ -13,13 +13,14 @@ def get_file_contents(path):
         return file.read()
     
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     template_file = get_file_contents(template_path)
     source_file = get_file_contents(from_path)
     source_html = markdown_to_html_node(source_file).to_html()
     title = extract_title(source_file)
     new_html = template_file.replace("{{ Title }}", title).replace("{{ Content }}", source_html)
+    new_html = new_html.replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}') # Causes problems when run with basepath = "./"
     
     dest_dir_path = path.dirname(dest_path)
     if dest_dir_path != "":
@@ -28,13 +29,13 @@ def generate_page(from_path, template_path, dest_path):
         file.write(new_html)
 
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     for item in listdir(dir_path_content):
         current_content = path.join(dir_path_content, item)
         current_dest = path.join(dest_dir_path, item)
         if path.isfile(current_content):
-            generate_page(current_content, template_path, path.join(path.dirname(current_dest), "index.html"))
+            generate_page(current_content, template_path, path.join(path.dirname(current_dest), "index.html"), basepath)
         else:
-            generate_pages_recursive(current_content, template_path, current_dest)
+            generate_pages_recursive(current_content, template_path, current_dest, basepath)
     
         

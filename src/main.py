@@ -10,11 +10,11 @@ def main():
         basepath = sys.argv[1]
     content_path = path.join(basepath, "content")
     template_path = path.join(basepath, "template.html")
-    public_path = path.join(basepath, "public")
+    public_path = path.join(basepath, "docs")
     static_path = path.join(basepath, "static")
     delete_public(public_path)
     copy_static_to_public(static_path, public_path)  
-    generate_pages_recursive(content_path, template_path, public_path)
+    generate_pages_recursive(content_path, template_path, public_path, basepath)
 
 
 main()
